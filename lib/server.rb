@@ -1,8 +1,9 @@
 require 'socket'
-
+count = 0
 tcp_server = TCPServer.new(9292)
-
+loop do
 connection = tcp_server.accept
+
 
 puts "ready for a request"
 request_lines = []
@@ -15,8 +16,9 @@ puts "Got a request:"
 puts request_lines.inspect
 
 puts "Sending response."
-response = "<pre>" + request_lines.join("\n") + "</pre>"
-# response = "<h1>SABRINA IS SO AWESOME!!</h1>"
+# response = "<pre>" + request_lines.join("\n") + "</pre>"
+response = "<h1>Hello, World! #{count += 1}</h1>"
+count += 1
 output = "<html><head></head><body>#{response}</body></html>"
 headers = ["http/1.1 200 ok",
           "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
@@ -30,3 +32,4 @@ puts ["wrote this response: ", headers, output].join("\n")
 connection.close
 
 puts "\nResponse sent, now exiting"
+end
