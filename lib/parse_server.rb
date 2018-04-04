@@ -5,8 +5,8 @@ class ParseServer
               :request_lines,
               :count
 
-  def initialize
-    @tcp_server = TCPServer.new(9292)
+  def initialize(server = TCPServer.new(9292))
+    @tcp_server = server
     @request_lines = []
     @count = 0
     @shutdown = false
@@ -39,20 +39,30 @@ class ParseServer
     end
   end
 
+  def set_output(response)
+    "<html><head></head><body>#{response}</body></html>"
+  end
+
+  def set_headers(datetime_response, output)
+    ["http/1.1 200 ok",
+    "date: #{datetime_response}",
+    "server: ruby",
+    "content-type: text/html; charset=iso-8859-1",
+    "content-length: #{output.length}\r\n\r\n"].join("\r\n")
+  end
+
+  def log(output, headers)
+    ["wrote this response: ", headers, output].join("\n")
+  end
+
   def send_response(response, connection)
     puts "Sending response."
-
-
-    output = "<html><head></head><body>#{response}</body></html>"
-    headers = ["http/1.1 200 ok",
-              "date: #{datetime_response}",
-              "server: ruby",
-              "content-type: text/html; charset=iso-8859-1",
-              "content-length: #{output.length}\r\n\r\n"].join("\r\n")
+    output = set_output(response)
+    headers = set_headers(datetime_response, output)
 
     connection.puts headers
     connection.puts output
-    puts ["wrote this response: ", headers, output].join("\n")
+    puts log(output, headers)
   end
 
   def run_server
@@ -103,7 +113,6 @@ class ParseServer
       self.datetime_response
     elsif path == "/shutdown"
        "Total Requests: #{@count}"
-
     end
   end
 
