@@ -20,7 +20,6 @@ class ParseServer
 
   def generate_root_response(parsed_headers)
     verb, path, protocol, host, port, accept = parsed_headers
-
     "<pre>
     Verb: #{verb}
     Path: #{path}
@@ -33,12 +32,9 @@ class ParseServer
   end
 
   def set_request_lines(connection)
-
     puts "ready for a request"
 
-    while (line = connection.gets) && !line.chomp.empty?
-      puts 'line'
-      puts line
+    while (line = connection.gets) and !line.chomp.empty?
       @request_lines << line.chomp
     end
   end
@@ -88,12 +84,12 @@ class ParseServer
   end
 
   def datetime_response
-    Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')
+    Time.now.strftime('%I:%M on %A, %B %d, %Y')
   end
 
   def shutdown
     @shutdown = true
-    # @tcp_server.exit
+
   end
 
   def response_path(parse_headers)
@@ -107,8 +103,7 @@ class ParseServer
       self.datetime_response
     elsif path == "/shutdown"
        "Total Requests: #{@count}"
-      # sleep 5
-      # self.shutdown
+
     end
   end
 
@@ -116,4 +111,3 @@ end
 
 server = ParseServer.new
 server.run_server
-# response = "<pre>" + @request_lines.join("\n") + "</pre>"
