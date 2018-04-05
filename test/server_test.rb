@@ -1,14 +1,15 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-require './lib/server'
+require './lib/response'
 require 'faraday'
 require 'pry'
 
 class ServerTest < Minitest::Test
-  def setup
-  @server = Server.new
-  @conn = Faraday.new(:url => 'localhost:9292')
-  @server.run_server
+
+  def test_it_exists
+  connection = Faraday.new(:url => 'localhost:9292')
+
+  assert_instance_of Faraday, connection
   end
   # def test_it_exists
   #   assert_instance_of Server, server
@@ -19,11 +20,11 @@ class ServerTest < Minitest::Test
   #   assert_equal [], server.request_lines
   # end
 
-  def test_hello_request
-    result = "<h1>Hello, World! (1)</h1>"
-    assert_equal @conn.get('/hello'), result
-    @server.shutdown
-  end
+  # def test_hello_request
+  #   result = "<h1>Hello, World! (1)</h1>"
+  #   assert_equal @conn.get('/hello'), result
+  #   @server.shutdown
+  # end
   #
   # def test_root_request
   #
