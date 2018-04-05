@@ -72,3 +72,5 @@ end
 
 server = Server.new
 server.run_server
+
+#gem install rails
