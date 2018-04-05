@@ -36,14 +36,18 @@ class Controller
       response.root_response(parse_headers)
     elsif path == "/hello"
       print "hello"
-      response.hello_response
+      response.hello_response +
+      response.root_response(parse_headers)
     elsif path == "/datetime"
-      response.datetime_response
+      response.datetime_response +
+      response.root_response(parse_headers)
     elsif path == "/shutdown"
-      response.shutdown_response
+      response.shutdown_response +
+      response.root_response(parse_headers)
     elsif path == "/word_search"
       parsed_params = parse_params(params)
-      response.word_search_response(parsed_params['word'])
+      response.word_search_response(parsed_params['word']) +
+      response.root_response(parse_headers)
     end
   end
 end
